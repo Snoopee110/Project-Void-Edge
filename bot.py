@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
-import config
+# import config
 import datetime
-import asyncio
 import os
 from dotenv import load_dotenv
 import subprocess
@@ -24,13 +23,13 @@ bot = commands.Bot(command_prefix='~', intents=intents)
 
 @bot.event
 async def on_ready():
+    print(f'Logged in as: {bot.user.name} (ID: {bot.user.id})')
     if os.environ.get("IS_DEV") == 'True':
-        print(f'Bot is in development mode. Setting correct version.')
+        print(f'In dev environment. Setting version.')
         await bot.change_presence(activity=discord.Game(name=f'V{os.environ.get("BOT_VERSION")} DEV'))
     else:
-        print(f'Bot is in development mode. Setting correct version.')
+        print(f'In prod environment. Setting version.')
         await bot.change_presence(activity=discord.Game(name=f'V{os.environ.get("BOT_VERSION")} Build {buildNumber}'))
-    print(f'Bot is logged in.\nLogged in as: {bot.user.name} (ID: {bot.user.id})')
 
     print('Syncing commands...')
     await bot.sync_commands(force=True)
