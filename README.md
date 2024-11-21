@@ -1,2 +1,2 @@
-# Project-Void-Edge
+# Project Void Edge
 The new discord bot codebase
