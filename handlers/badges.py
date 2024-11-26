@@ -1,12 +1,11 @@
 import enum
 
 class Badges(enum.Enum):
-    # Staff badges
-    ADMINISTRATOR = ('Administrator', '<administrator:1309240407497904269>', 'This user is a bot administrator.')
-    BOT_DEVELOPER = ('Bot Developer', '<bot_developer:1309240358760087690>', 'This user is a developer of the bot.')
-    GLOBAL_MOD    = ('Global Moderator', '0', 'This user is a global bot moderator.')
-    QUOTEBOOK_MOD = ('Quotebook Gatekeeper', '0', 'This user is a moderator of the quotebook.')
-    CONTRIBUTOR   = ('Contributor', '<contributor:1309240489605595198>', 'This user has contributed to the bot in some way.')
+    # Staff Given Badges
+    BOT_DEVELOPER = ('Bot Developer', '<:bot_developer:1309366562435760190>', 'This user is a developer of the bot.')
+    CONTRIBUTOR   = ('Contributor', '<:contributor:1309366597219123250>', 'This user has contributed to the bot in some way.')
+    STAFF         = ('Staff', '<:staff:1310812514140819478>', 'This user is a staff member of the bot.')
+
 
     @property
     def name(self):
