@@ -4,7 +4,7 @@ from discord.ui import Button
 from handlers.database import Database
 from handlers.badges import Badges, LevelBadges
 from handlers.roles import Roles
-from handlers import config
+from handlers import config, helper
 
 class Admin(commands.Cog):
     def __init__(self, bot):
@@ -15,22 +15,22 @@ class Admin(commands.Cog):
     @admin.command()
     @commands.is_owner()
     async def view_user(self, ctx, user: discord.User):
-        msg = await ctx.respond(f'{config.loading_emoji} Fetching user data...')
+        msg = await ctx.respond(content=f'{config.loading_emoji} Fetching user data...', ephemeral=True)
         db = Database()
         user_data = db.universal_find_one('users', {'user_id': user.id})
         if not user_data:
             await msg.edit(content=config.error_user_not_found)
             return
-        user_role = Roles.from_name(user_data['role'])
-        if user_role is None:
-            user_role = None
+        user_role = Roles.from_name(user_data['role']) if user_data['role'] is not None else None
         progress = int((user_data['xp'] / user_data['xp_to_next_level']) * 10)  # Assuming 10 steps for the XP bar
         xp_bar = '🟩' * progress + '⬜' * (10 - progress)
-        embed = discord.Embed(title=f'User Data for {user.display_name}', color=discord.Color.blue()) if not user_data['is_bot'] \
+        embed = discord.Embed(title=f'User Data for {user.display_name}',
+                              color=discord.Color.blue()) if not user_data['is_bot'] \
            else discord.Embed(title=f'User Data for {user.display_name} (Bot)', color=discord.Color.green())
         embed.add_field(name='Username', value=user_data['username'], inline=True)
         embed.add_field(name='User ID', value=user_data['user_id'], inline=True)
-        embed.add_field(name='Role', value=f'{user_role if user_role else "No Role"}', inline=True)
+        embed.add_field(name='Role', value=f'{user_role.emoji if user_role else ""} \
+                                             {user_role.name if user_role else "No Role"}', inline=True)
         embed.add_field(name='Level', value=user_data['level'], inline=True)
         embed.add_field(name='XP', value=f"{xp_bar} ({user_data['xp']}/{user_data['xp_to_next_level']})", inline=False)
         embed.add_field(name='Currency', value=user_data['currency'], inline=False)

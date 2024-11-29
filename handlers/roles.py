@@ -31,3 +31,11 @@ class Roles(enum.Enum):
             if badge.name == normalized_name:
                 return badge
         raise ValueError(f"No badge with name '{normalized_name}' found.")
+
+# Get the role by its name
+def get_role_by_name(name):
+    normalized_name = Roles.normalize_name(name)
+    for role in Roles:
+        if role.name == normalized_name:
+            return role
+    return None

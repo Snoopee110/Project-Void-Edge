@@ -21,7 +21,6 @@ class Badges(enum.Enum):
 
     @classmethod
     def normalize_name(cls, name):
-        """Normalize a name to match the enum's name format."""
         return name.title()
 
     @classmethod

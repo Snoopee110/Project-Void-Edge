@@ -9,6 +9,9 @@ class Levelling(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    levels = discord.SlashCommandGroup(name='profile', description='Commands for levelling up and badges.')
+    settings = levels.create_subgroup(name='settings', description='Commands for setting up your profile.')
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:
@@ -27,7 +30,15 @@ class Levelling(commands.Cog):
                 'currency': 0,
                 'inventory': [],
                 'badges': [],
-                'featured_badges': []
+                'featured_badges': [],
+                'pet': {
+                    'name': None,
+                    'species': None,
+                    'hunger': 0,
+                    'happiness': 0,
+                    'last_fed': None,
+                    'last_played': None
+                }
             }
             db.universal_insert('users', user_data)
             return
@@ -43,8 +54,8 @@ class Levelling(commands.Cog):
                     user_data['badges'].append(level_badge.name)
         db.universal_update('users', {'user_id': message.author.id}, {'$set': user_data})
 
-    @commands.slash_command()
-    async def profile(self, ctx):
+    @levels.command()
+    async def view(self, ctx):
         msg = await ctx.respond(f'{config.loading_emoji} Fetching profile...')
         featured_badges = []
         db = Database()
@@ -56,17 +67,20 @@ class Levelling(commands.Cog):
         role = Roles.from_name(user_data['role']) if user_data['role'] is not None else None
         progress = int((user_data['xp'] / user_data['xp_to_next_level']) * 10)
         xp_bar = '🟩' * progress + '⬜' * (10 - progress)
-        embed = discord.Embed(title=f'{role.emoji if role is not None else ""} {ctx.author.display_name}\'s Profile', color=discord.Color.blue())
+        embed = discord.Embed(title=f'{role.emoji if role is not None else ""} {ctx.author.display_name}\'s Profile',
+                              color=discord.Color.blue())
         embed.add_field(name='Level', value=user_data['level'], inline=True)
         embed.add_field(name='XP', value=f'{xp_bar} ({user_data["xp"]}/{user_data["xp_to_next_level"]})', inline=True)
-        for badge in user_data['featured_badges']:
-            badge = Badges.from_name(badge)
-            featured_badges.append(badge)
-        embed.add_field(name='Featured Badges', value='\n'.join([f'{badge.emoji}  {badge.name}' for badge in featured_badges]), inline=False)
+        if user_data['featured_badges']:
+            for badge in user_data['featured_badges']:
+                badge = Badges.from_name(badge)
+                featured_badges.append(badge)
+            embed.add_field(name='Featured Badges', value='\n'.join([f'{badge.emoji} {badge.name}' for badge in featured_badges]),
+                            inline=False)
         embed.set_thumbnail(url=ctx.author.display_avatar)
         await msg.edit(content=None, embed=embed)
 
-    @commands.slash_command()
+    @settings.command()
     async def set_featured_badge(self, ctx, badge):
         msg = await ctx.respond(f'{config.loading_emoji} Setting featured badge...')
         db = Database()
@@ -90,7 +104,7 @@ class Levelling(commands.Cog):
         db.universal_update('users', {'user_id': ctx.author.id}, {'$set': user_data})
         await msg.edit(content=f'Set badge {badge.emoji} {badge.name} as a featured badge.')
 
-    @commands.slash_command()
+    @settings.command()
     async def remove_featured_badge(self, ctx, badge):
         msg = await ctx.respond(f'{config.loading_emoji} Removing featured badge...')
         db = Database()
