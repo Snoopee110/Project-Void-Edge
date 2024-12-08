@@ -37,7 +37,8 @@ class Levelling(commands.Cog):
                     'hunger': 0,
                     'happiness': 0,
                     'last_fed': None,
-                    'last_played': None
+                    'last_played': None,
+                    'daily_streak': 0
                 }
             }
             db.universal_insert('users', user_data)

@@ -4,14 +4,14 @@ version = "1.0.0"
 description = "A multi-purpose collection of discord bots deployed in Docker"
 authors = ["Snoopee <79824744+Snoopee110@users.noreply.github.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.11"
 py-cord = "^2.6.1"
-sentry-sdk = "^2.18.0"
+sentry-sdk = "^2.19.2"
 python-dotenv = "^1.0.1"
 pymongo = "^4.10.1"
-
 
 [build-system]
 requires = ["poetry-core"]
