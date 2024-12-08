@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 
-class InventoryEnums(enum):
-    pass
+class InventoryEnums(Enum):
+    BasicPetFood = ('Basic Food', 0, )

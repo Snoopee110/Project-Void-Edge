@@ -1,6 +1,6 @@
-import enum
+from enum import Enum
 
-class Badges(enum.Enum):
+class Badges(Enum):
     # Staff Given Badges
     BOT_DEVELOPER = ('Bot Developer', '<:bot_developer:1309366562435760190>', 'This user is a developer of the bot.')
     CONTRIBUTOR   = ('Contributor', '<:contributor:1309366597219123250>', 'This user has contributed to the bot in some way.')
@@ -33,8 +33,8 @@ class Badges(enum.Enum):
         raise ValueError(f"No badge with name '{normalized_name}' found.")
 
 
-class LevelBadges(enum.Enum):
-    LEVEL_5 =   ('Level 5', 0, 'This user has reached level 5.', 5)
+class LevelBadges(Enum):
+    LEVEL_5  =  ('Level 5', 0, 'This user has reached level 5.', 5)
     LEVEL_10 =  ('Level 10', 0, 'This user has reached level 10.', 10)
     LEVEL_20 =  ('Level 15', 0, 'This user has reached level 20.', 20)
     LEVEL_30 =  ('Level 30', 0, 'This user has reached level 30.', 30)
