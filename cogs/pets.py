@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ui import View, Button, Select
-from handlers.InventoryEnums import InventoryEnums
+from handlers.inventory import ItemEnums
 
 
 class PetItemSelect(Select):
